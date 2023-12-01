@@ -6,4 +6,6 @@ R is a programming language used for statistical computing. R is used universall
 You can of course write R code in a notepad and then run it from terminal/command line, but nobody really does that. R comes with RStudio - an integrated development environment, i.e. a set of tools to develop, modify and test your code. 
 
 ## Before our meeting, please do the following:
-### install and download R: https://cran.radicaldevelop.com/  
+1. download and install R: https://cran.radicaldevelop.com/  
+2. download and install RStudio: https://posit.co/download/rstudio-desktop/ --> scroll down and find a version that is compatible with your system
+3. run RStudio on your computer and check if it works (e.g next to the > type "2+2" and check if it returns a result
