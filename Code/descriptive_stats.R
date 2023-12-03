@@ -3,10 +3,8 @@
 # it's generally a good idea to add comments to your code
 # because then you know what each line does
 # this is especially good if you are a beginner
-library(tidyverse) # this library is for data wrangling
 library(ggplot2) # this library is for visualisation
-library(lme4) # this library is for modelling
-library(afex) # and this shows p-values in models :)
+
 
 # some general introduction to R
 # R, as many other programming languages
@@ -36,6 +34,7 @@ a < b
 a >= b
 a <= b
 a <= b + 2
+sqrt(a)
 # etc.
 
 # but we're here for statistics
@@ -51,7 +50,7 @@ mydf <- data.frame(student, test_score)
 # two columns
 # the first stores student names
 # and the other their scores on some test
-
+mydf
 # we use $ operator to access individual columns of the data frame
 mydf$student
 mydf$test_score
@@ -133,8 +132,9 @@ ggplot(mtcars, aes(x = hp, y = mpg)) +
 # If you write geom_, RStudio's auto-completion shows a list of possibilities
 # in aes, you can also specify other things:
 
-ggplot(mtcars, aes(x = hp, y = mpg, color = hp)) + 
-  geom_point()
+ggplot(mtcars, aes(x = hp, y = mpg)) + 
+  geom_point() +
+  geom_smooth() # add a trend line
 
 # let's go back to the data
 head(mtcars)
@@ -160,8 +160,23 @@ levels(mtcars$am)
 # maybe there's a difference between a and m
 # in terms of mpg?
 
+# we can show that using a boxplot
 ggplot(mtcars, aes(x = am, y = mpg)) + 
   geom_boxplot()
+# or a violin plot
+ggplot(mtcars, aes(x = am, y = mpg)) + 
+  geom_violin()
+
+# why not both? ;)
+ggplot(mtcars, aes(x = am, y = mpg)) + 
+  geom_violin() +
+  geom_boxplot(width = 0.1) +
+  stat_summary(
+    geom = "point",
+    fun = median,
+    color = "black",
+    size = 1.5
+  )
 
 # we can also change the colour
 ggplot(mtcars, aes(x = am, y = mpg, fill = am)) + 
@@ -217,7 +232,11 @@ ggsave("ttfc.jpg", dpi = 300)
 
 # play around with the data
 head(mtcars)
+# show summary statistics for car weights
+# do shapiro on them, too
 # draw a plot that shows the relation between weight and fuel consumption
+# do summary statistics for vs
+# do shapiro on them, too
 # draw a plot that shows the relation between vs and fuel consumption
 # draw a plot that shows the relation between the number of cylinders and fuel consumption
 # (possibly two ways to do the last one)
