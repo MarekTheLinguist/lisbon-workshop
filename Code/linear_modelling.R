@@ -18,6 +18,7 @@ data
 # let's see the distribution - histogram and shapiro
 # let's plot the data - only a sample, because the whole 
 # cotains about 33000 rows, so the plot will be far from legible
+# what plot do you think will be good here?
 sample_data = data[1:200,]
 # insert your code here
 # insert your code here
@@ -146,6 +147,73 @@ summary(mdl)
 # or more
 # and their interactions
 
+data(mtcars)
+mtcars
 
-#### LOGISTIC REGRESSION ####
+# let's say we want to check if a car's fuel consumption
+# changes with a car's hp and weight
 
+car_simple <- lm(mpg ~ hp + wt, data = mtcars)
+summary(car_simple) # ok, so it seems we get less mpg per an increase
+# in hp and wt
+# but it is likely that we have an interaction between the two
+# (heavier cars with more horse power consume less gas)
+
+car_inter <- lm(mpg ~ hp * wt, data = mtcars)
+summary(car_inter)
+
+# we get more estimates now. First of all, we get hp and wt, we know
+# these from the simple model
+# but we also get an interaction between the two.
+# So, a one unit increase in wt gets us -8 mpg
+# and a one unit increase in hp gets us -0.12
+# but their interaction gives us slightly better mpg
+# problem: these two are on completely different scales!
+# Let's standardise the predictors
+# Standarisation means that now each observation
+# is transformed into a value that is its deviation
+# from the mean. It's unit "agnostic"!
+
+mtcars <- mutate(mtcars, wt_z = (wt - mean(wt)) / sd(wt),
+                 hp_z = (hp - mean(hp)) / sd(hp))
+
+mdl_inter_transformed <- lm(mpg ~ wt_z * hp_z, data = mtcars)
+summary(mdl_inter_transformed)
+# makes more sense now
+
+# two predictors, but one of them is categorical
+# this is when stuff gets tricky ;)
+# let's pose the following research question:
+# do cars with manual transmission
+# and that weigh more 
+# use more gas than cars with automatic transmission
+# let's start simple and see how these two variables
+# affect mpg independently:
+
+mtcars$am <- as_factor(mtcars$am)
+
+mdl_sim <- lm(mpg ~ am + wt, data = mtcars)
+summary(mdl_sim)
+# the interpretation is the following:
+# cars with automatic transmission
+# do not differ significantly from cars with the stick
+# in terms of mpg
+# the model also indicates a significant
+# reduction of mpg for both types of cars
+# the model somehow averages out these values between the two 
+# cars and estimates the slope based on that
+
+# let's consider an interaction now
+mdl_inter <- lm(mpg ~ am * wt, data = mtcars)
+summary(mdl_inter)
+
+# the first estimate shows a positive slope for manual transmission
+# this means that manual transmission cars generally use less
+# gas
+# the second estimate shows a negative slope per an increase of one unit of weight
+# for AUTOMATIC TRANSMISSION ONLY - heavier cars with automatic transmission use more gas
+# finally, we have an interaction term:
+# am1:wt -> the slope is negative
+# this means that cars with manual transmission that are heavier
+# use even more gas than cars with automatic transmission per an increase
+# in weight (the slope is steeper -> larger estimate value)

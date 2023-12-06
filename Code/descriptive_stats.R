@@ -78,7 +78,7 @@ mtcars
 head(mtcars)
 
 # and this if you want to see it formatted
-view(mtcars)
+View(mtcars)
 # the data frame contains information about:
 
     # mpg: Miles/(US) gallon
@@ -97,7 +97,12 @@ view(mtcars)
 
 # Now it's your turn :)
 # report descriptive statistics for miles per gallon
-
+sd(mtcars$mpg)
+var(mtcars$mpg)
+mean(mtcars$mpg)
+median(mtcars$mpg)
+range(mtcars$mpg)
+summary(mtcars$mpg)
 ### 
 # insert your code here
 ###
@@ -149,7 +154,7 @@ mtcars$am
 # but R doesn't "know" about it
 # we need to tell it explicitly to treat it as such
 # we do so with as_factor() function. Check it out:
-
+library(tidyverse)
 mtcars$am <- as_factor(mtcars$am)
 # let's check it again
 mtcars$am
@@ -173,9 +178,9 @@ ggplot(mtcars, aes(x = am, y = mpg)) +
   geom_boxplot(width = 0.1) +
   stat_summary(
     geom = "point",
-    fun = median,
+    fun = mean,
     color = "black",
-    size = 1.5
+    size = 1
   )
 
 # we can also change the colour
@@ -194,12 +199,13 @@ ggplot(mtcars, aes(x = am, y = mpg, color = am)) +
 ggplot(mtcars, aes(x = am, y = mpg, color = am)) + 
   geom_boxplot() + 
   geom_jitter() + 
-  theme_minimal()
+  theme_light()
 # play around with themes!
 
 # 0 and 1 is not very informative, and we want our plots to tell
 # some story
 # let's change 0 and 1 to something else
+levels(mtcars$am)
 levels(mtcars$am) <- c("automatic", "manual")
 levels(mtcars$am)
 
@@ -223,7 +229,7 @@ ggplot(mtcars, aes(x = am, y = mpg, color = am)) +
   geom_boxplot() + 
   geom_jitter() + 
   xlab("Transmission type") +
-  ylab("Miles per gallon") + 
+  ylab("Miles per gallon") +
   ggtitle("Transmission type and fuel consumption") + 
   theme_minimal()
 
